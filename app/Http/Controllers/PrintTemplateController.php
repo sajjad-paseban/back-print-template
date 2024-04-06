@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PrintTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Initial;
 
 class PrintTemplateController extends Controller
 {
@@ -48,7 +49,10 @@ class PrintTemplateController extends Controller
             $result = false;
         }else{
             $result = PrintTemplate::create($request->all());
+            Initial::move_images_from_temp($result->id);
         }
+
+        // Initial::remove_files_from_temp_folder();
 
         return Response::json(
             [
@@ -64,19 +68,33 @@ class PrintTemplateController extends Controller
         $result = PrintTemplate::where('name', $request->name)
         ->where('print_template_group', $request->print_template_group);
 
-        if($result->count() > 0){
+        if($result->count() > 1){
             $result = false;
         }else{
             $result = PrintTemplate::find($id)->update($request->all());
         }
 
+        // Initial::remove_files_from_temp_folder();
+
         return Response::json(
             [
                 'message' => $result ? 'عملیات با موفقیت انجام شد' : 'عملیات انجام نشد',
-                'id' => $result ? intval($id) : null
+                // 'id' => $result ? intval($id) : null
 
             ],
             $result ? 200 : 400
         );
     }
+
+    public function templatePreview(Request $request){
+        $data = $request->data;
+        $model = $request->model;
+
+        if($model === 'SURVEY'){
+
+        }
+
+
+    }
+
 }
