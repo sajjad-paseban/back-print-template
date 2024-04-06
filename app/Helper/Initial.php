@@ -1,6 +1,12 @@
 <?php
 
+use App\Models\PrintTemplate;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 class Initial{
+    public static $BACKEND_URL = 'http://localhost/back-print/public/storage/';
+    public static $PATH_TO_PRINT_TEMP_GALLERY = './storage/uploads/gallery/temp';
+    public static $PATH_TO_PRINT_GALLERY = './storage/uploads/gallery/main';
     public static $temp_sizes =
     [
         'a4 - عمودی',
@@ -521,4 +527,42 @@ class Initial{
         return $data;
     }
 
+    public static function get_model_variables(){
+        return
+        [
+            "SURVEY" => "SURVEY",
+            "FEATURE" => "FEATURE",
+        ];
+    }
+
+    public static function move_images_from_temp($temp_id){
+        $temp_path = Initial::$PATH_TO_PRINT_TEMP_GALLERY;
+        $main_path = Initial::$PATH_TO_PRINT_GALLERY;
+
+        $printTemplate = PrintTemplate::find($temp_id);
+
+        $template_path = $main_path . '/' . $printTemplate->id .'/';
+
+        if(!File::exists($template_path))
+            File::makeDirectory($template_path);
+
+        $temp_all_files = File::allFiles($temp_path);
+
+        foreach($temp_all_files as $item){
+            File::move($item, $template_path. str_replace($temp_path. '/', '', $item));
+        }
+
+        $printTemplate->temp_value = str_replace($temp_path,$template_path, $printTemplate->temp_value);
+
+        $printTemplate->save();
+    }
+
+    public static function remove_files_from_temp_folder(){
+
+        $all_temp_files = File::allFiles(Initial::$PATH_TO_PRINT_TEMP_GALLERY);
+
+        foreach($all_temp_files as $item){
+            File::delete($item);
+        }
+    }
 }
