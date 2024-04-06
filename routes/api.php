@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\InitDataTemplateController;
 use App\Http\Controllers\PrintTemplateController;
 use App\Http\Controllers\PrintTemplateGroupController;
@@ -19,9 +20,14 @@ Route::prefix('v1')->group(function () {
         Route::get('templateItem/{id}', [PrintTemplateController::class, 'templateItem']);
         Route::delete('templateDelete/{id}', [PrintTemplateController::class, 'templateDelete']);
         Route::post('templateAdd', [PrintTemplateController::class, 'templateAdd']);
-        Route::put('templateUpdate/{id}', [PrintTemplateController::class, 'templateUpdate']);
+        Route::post('templateUpdate/{id}', [PrintTemplateController::class, 'templateUpdate']);
+        Route::post('templatePreview', [PrintTemplateController::class, 'templatePreview']);
         // initTemplateData
         Route::get('init_data', [InitDataTemplateController::class, 'get_init_data']);
-
+        Route::get('model_variables', [InitDataTemplateController::class, 'get_model_variables']);
+        // imageUpload
+        Route::post('uploadImageTemp', [ImageUploadController::class, 'uploadImageTemp']);
+        Route::post('uploadImage/{id}', [ImageUploadController::class, 'uploadImage']);
+        Route::delete('removeImage', [ImageUploadController::class, 'removeImage']);
     });
 });
