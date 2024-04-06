@@ -4,6 +4,8 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/uploads/gallery/temp/*
+/storage/uploads/gallery/main/*
 /vendor
 .env
 .env.backup
