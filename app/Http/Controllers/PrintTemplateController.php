@@ -6,7 +6,7 @@ use App\Models\PrintTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Initial;
-
+use TemplateBuilder;
 class PrintTemplateController extends Controller
 {
     public function templateList(Request $request){
@@ -87,13 +87,39 @@ class PrintTemplateController extends Controller
     }
 
     public function templatePreview(Request $request){
+
         $data = $request->data;
         $model = $request->model;
 
+
         if($model === 'SURVEY'){
 
+            $database_object = (object)[
+                'arse_id' => 1,
+                'area' => 200,
+            ];
+
+            $templateBuilder = new TemplateBuilder();
+
+            $data = $templateBuilder->setListVariable($data, $database_object);
+            $data = $templateBuilder->setVariableValue($data, $database_object, 'arse');
+
+            $result = (object)[
+                'data' => $data ? $data : '',
+                'model' => $model
+            ];
+
+        }else{
+            $result = (object)[
+                'data' => $request->data,
+                'model' => $model
+            ];
         }
 
+        return Response::json(
+            $result,
+            200
+        );
 
     }
 
