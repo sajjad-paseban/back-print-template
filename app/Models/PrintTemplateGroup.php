@@ -12,7 +12,9 @@ class PrintTemplateGroup extends Model
 
     protected $table = "print_template_group";
 
-    protected $guarded = [];
+    protected $guarded = [
+        'id'
+    ];
 
     public function printTemplateGroup(): BelongsTo{
         return $this->belongsTo(PrintTemplateGroup::class, 'parent');
