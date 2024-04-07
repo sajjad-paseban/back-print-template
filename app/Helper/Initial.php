@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\PrintTemplate;
+use App\Models\PrintTemplateVar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 class Initial{
@@ -524,7 +525,7 @@ class Initial{
 
         ];
 
-        return $data;
+        return PrintTemplateVar::all();
     }
 
     public static function get_model_variables(){
